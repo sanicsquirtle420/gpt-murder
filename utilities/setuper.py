@@ -8,7 +8,8 @@ class Setuper:
 
         """
         This function initialized murdere and victim. 
-        it takes two indexes that were choosen during the previous game
+        it takes array of 2 values as arguement
+        these are two indexes that were choosen during the previous game
         and removes them from the possible choices, so no 2 consecutive pairs are choosen
 
         it return touple of 2 values. 
