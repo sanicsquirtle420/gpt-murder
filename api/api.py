@@ -71,55 +71,81 @@ llm = local(IP, 50001, API_KEY)
 
 
 
-llm.append_to_history("user", ""
-"""
-You are acting as a **dialogue generator** for a short **murder mystery game** set on a farm.  
-The farm has 4 main locations: **Tavern, Workshop, Lake, and Field.** You can also mention a **Well** at the center of the farm.  
-Thee character are aware of the murder
-### **Characters & Roles:**  
-The game has five key characters:  
-1. **Finnley 'Finn' Thatch** – A cheerful farmhand who loves animals and tells tall tales. (His place: **Lake**)  
-2. **Marlowe Reed** – A mysterious traveler who sells rare seeds and artifacts. (His place: **Tavern**)  
-3. **Elsie Bloom** – A kind-hearted botanist passionate about growing exotic plants. (Her place: **Field**)  
-4. **Jasper "Jas" Holt** – A laid-back fisherman who knows all the village gossip.  
-5. **Sylvia Pine** – A quiet carpenter who builds and repairs structures around town.  
 
-At the start of the game, **roles are randomly assigned** to the characters:  
-- **Murderer** → The character who committed the murder. Their personal statement should subtly hint at **a motive**, and their observation should provide a **false alibi** that conflicts with another character’s statement.  
-- **Victim** → The character who was murdered. (Do **not** generate dialogue for this character.)  
-- **Key Observer** → The character who **notices something important** that helps the player deduce the murderer. Their statement should **hint at an inconsistency in the murderer’s alibi.**  
-- **False Accuser** → This character **wrongly blames another character** for the crime. Their accusation should introduce **misdirection** but should not be entirely illogical.  
-- **Falsely Accused** → This character is **falsely accused** but has **a strong alibi** that contradicts the false accuser’s statement.  
-
-### **Instructions for Generating Dialogue:**  
-Each non-victim character should provide **two dialogues:**  
-
-1. **Personal Statement** → Provides an **alibi, motive, or suspicion** (this should hint at what the character was doing at the time of the murder).  
-2. **Observation Statement** → Their response to *“Have you seen anything unusual?”*  
-   - If they are the **murderer**, their observation should introduce a **false alibi** that **contradicts** another character’s statement.  
-   - If they are the **key observer**, their observation should highlight **an inconsistency** in the murderer’s story.  
-   - If they are the **false accuser**, they should **wrongly blame** another character (index 4).  
-   - If they are the **falsely accused**, their personal statement should provide a **clear alibi** that proves they are innocent.  
-
-### **Formatting for Parsing:**  
-Structure your response using the following format:  
-- Use **`###`** for sections.  
-- Use **`---`** to separate entries.  
-- Use **`::`** for key-value pairs.  
-
-
-"""
-)
 
 setuper = Setuper()
-charset = setuper.initRoles([-1, -1])
+charset = setuper.initRoles([-1,-1])
 
 print(charset)
 
-message = f"Murderer: {charset[0]["name"]}, victim: {charset[1]["name"]} key observer: {charset[2]["name"]}, false accuser {charset[3]["name"]} false accused {charset[4]["name"]}. DO NOT GENERATE DIALOGUE FOR {charset[1]["name"]} "
+message = f"""
+You are generating in-game dialogues for a mystery murder game set on a farm. There are four remaining NPCs, each with a predefined role. 
+
+Here are the profiles for each character:
+
+Finnley "Finn" Thatch – A cheerful farmhand who loves animals and tells tall tales.
+
+Marlowe Reed – A mysterious traveler who sells rare seeds and artifacts.
+
+Elsie Bloom – A kind-hearted botanist passionate about growing exotic plants.
+
+Jasper "Jas" Holt – A laid-back fisherman who knows all the village gossip.
+
+Sylvia Pine – A quiet carpenter who builds and repairs structures around town. 
+
+
+Generate two pieces of dialogue for each:
+Personal Statement: Their own alibi or view on the situation.
+Observation: A piece of information they noticed about the crime scene or another character.
+
+Observation should not be direct accusation, just hints
+
+Each role follows these specific rules:
+
+Murderer: Their observation must introduce a false alibi that contradicts another character’s statement.
+
+Key Observer: Their observation must highlight an inconsistency in the murderer’s story, but they should not realize that murderer is being accused.
+
+False Accuser: Their observation must wrongly blame another character.
+
+Falsely Accused: Their personal statement should provide a clear alibi proving their innocence.
+
+Ensure the responses are immersive and fit each character's personality. Present them in the following strict format:
+
+###
+name::[Character Name]  
+Personal Statement::[Character's personal statement]  
+Observation::[Character's observation]  
+###  
+Example Output:
+###
+name::Jasper "Jas" Holt  
+Personal Statement::I was out by the river fishing all morning. Didn’t see a soul until I came back to the farm.  
+Observation::Strange thing is, Finn says he was in the barn the whole time, but I saw someone in a dark coat near the tool shed.  
+###  
+
+
+Now, generate responses following this format for these roles:
+Victim is {charset[1]["name"]}. YOU DO NOT NEED TO GENERATE ANY DIALOGUES FOR HER
+
+{charset[0]["name"]} is a MURDERER. Their personal statement should tell something about their character, or motive. They should not directly show hostility towards victim
+Their observation can be an alibi. 
+
+{charset[2]["name"]} is A KEY OBSERVER. Their personal statement should tell something about their character.
+Their observation should be something that CONTRADICTS alibi of Murderer,  who is {charset[0]["name"]}
+
+{charset[3]["name"]} is A WRONG ACCUSER. Their personal statement should tell something about their character.
+Their observation should be something that WRONGLY ACCUSES  {charset[4]["name"]}.
+
+{charset[4]["name"]} IS A WRONG ACCUSED. Their personal statement should tell something about their character.
+Their observation should be something that EXPLAINS accusation of {charset[3]["name"]}
+
+"""
 
 answer, reasoning = llm.get_response(message)
 
+
+print(answer)
 
 def parse_answer(answer):
     parsed_answer = {}
