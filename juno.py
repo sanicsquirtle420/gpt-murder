@@ -1,41 +1,36 @@
 import pygame
 
+pygame.init()
+screen = pygame.display.set_mode((800 , 700) , pygame.RESIZABLE)
+pygame.display.set_caption("Juno :D")
+# font = pygame.font.SysFont("Arial" , 30)
+img = pygame.image.load("assets/kiriko-juno1.png").convert_alpha()
+
+def draw_window(img_info):
+    screen.fill((147,204,207))
+    screen.blit(img , (img_info.x , img_info.y))
+    pygame.display.update()
+
 def main():
-    pygame.init()
-
-    # sets up the dimensions for the window (600 x 700)
-    screen = pygame.display.set_mode((600 , 700) , pygame.RESIZABLE)
-    font = pygame.font.SysFont("Arial" , 30)
-
-    img = pygame.image.load("assets/shakes.jpg").convert_alpha()
-
+    juno_info = pygame.Rect(0,0 , img.get_width() , img.get_height())
     status: bool = True
     while status:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type is pygame.QUIT:
                 status = False
-            elif event.type == pygame.VIDEORESIZE:
-                # Handles screen resizing
-                screen = pygame.display.set_mode((event.w , event.h) , pygame.RESIZABLE)
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_a]:
+            juno_info.x = juno_info.x - 1
+        elif keys[pygame.K_d]:
+            juno_info.x = juno_info.x + 1
+        elif keys[pygame.K_w]:
+            juno_info.y = juno_info.y - 1
+        elif keys[pygame.K_s]:
+            juno_info.y = juno_info.y + 1
+        elif keys[pygame.K_q]:
+            pygame.quit()
 
-        screen_width , screen_height = screen.get_size()
-
-        img_width = screen_width // 5
-        img_height = screen_height // 5
-        scaled_img = pygame.transform.scale(img , (img_width , img_height))
-
-        img_x = (screen_width - img_width) // 2
-        img_y = (screen_height - img_height) // 2
-
-        text = font.render("Welcome to orbit!" , True , (0,0,0))
-        text_x = (screen_width - text.get_width()) // 2
-        text_y = screen_height - 100
-
-        screen.fill((147 , 204 , 207))
-
-        screen.blit(scaled_img , (img_x , img_y))
-        screen.blit(text , (text_x , text_y))
-        pygame.display.flip()
+        draw_window(juno_info)
 
     pygame.quit()
 
