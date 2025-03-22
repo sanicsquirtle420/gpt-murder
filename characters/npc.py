@@ -3,7 +3,11 @@ import os
 
 class NPC(object):
     def __init__(self, x: int, y: int):
-        self.img = pygame.image.load("assets/kiriko-juno1.png").convert_alpha()
+        CURRENT_DIR = os.path.dirname(__file__)
+        ASSETS_DIR = os.path.join(CURRENT_DIR, "..", "assets")
+        IMG_DIR = os.path.join(ASSETS_DIR, "shakes.jpg")
+
+        self.img = pygame.image.load(IMG_DIR).convert_alpha()
         self.img = pygame.transform.scale(self.img, (115, 115))
         self.rect = pygame.Rect(x, y, self.img.get_width(), self.img.get_height())
         self.speed = 5
