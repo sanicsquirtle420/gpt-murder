@@ -7,7 +7,7 @@ def main():
     screen = pygame.display.set_mode((600 , 700) , pygame.RESIZABLE)
     font = pygame.font.SysFont("Arial" , 30)
 
-    img = pygame.image.load("/home/raccoon/Pictures/juno1.png").convert_alpha()
+    img = pygame.image.load("assets/kiriko-juno1.png").convert_alpha()
 
     status: bool = True
     while status:
