@@ -13,7 +13,7 @@ class Juno(object):
         self.rect = pygame.Rect(x,y , self.img.get_width() , self.img.get_height())
         self.speed = speed
 
-    def move(self , keys , barrier) -> None:
+    def move(self , keys , barrier , npcs) -> None:
         dx , dy = 0 , 0
 
         if keys[pygame.K_a]:
@@ -35,6 +35,10 @@ class Juno(object):
         bar_y = self.rect.y + dy * self.speed
 
         tmp_rect = pygame.Rect(bar_x , bar_y , self.rect.width , self.rect.height)
+        for npc in npcs:
+            if tmp_rect.colliderect(npc.rect):
+                return
+
         if barrier.contains(tmp_rect):
             self.rect.x = bar_x
             self.rect.y = bar_y
