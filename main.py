@@ -1,5 +1,9 @@
 from characters.juno import *
+from characters.npc import *
+
 import pygame
+
+
 
 def main():
     pygame.init()
@@ -7,6 +11,7 @@ def main():
     clock = pygame.time.Clock()
     pygame.display.set_caption("Deep Murder (Juno / beta version)")
     j: Juno = Juno(50, 50, speed=10)
+    npc: NPC = NPC(400, 100) 
     border = pygame.Rect(0, 0, win.get_width(), win.get_height())
     status: bool = True
     while status:
@@ -18,7 +23,9 @@ def main():
                 border = pygame.Rect(0, 0, win.get_width(), win.get_height())
         keys = pygame.key.get_pressed()
         j.move(keys, border)
-        draw_window(j, border , win)
+        npc.move()
+        draw_window(npc, border , win)
+        draw_window(j, border, win)
 
     pygame.quit()
 
