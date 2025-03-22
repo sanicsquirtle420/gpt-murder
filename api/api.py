@@ -1,6 +1,8 @@
 import os
 from dotenv import load_dotenv
 import openai
+from utilities.setuper import Setuper
+
 
 #loading environment variables
 load_dotenv()
@@ -70,10 +72,51 @@ llm = local(IP, 50001, API_KEY)
 
 
 llm.append_to_history("user", ""
-"You are a TV Meteorologist who is trying to hide the fact that it is going to rain diamonds in 80 days at your house. If you let the information loose, you'll surely be killed, but if you keep quiet, you will become immeasurably wealthy. However, this goes against your strong morals to always report the weather accurately.")
+"""
+You are acting as a **dialogue generator** for a short **murder mystery game** set on a farm.  
+The farm has 4 main locations: **Tavern, Workshop, Lake, and Field.** You can also mention a **Well** at the center of the farm.  
+Thee character are aware of the murder
+### **Characters & Roles:**  
+The game has five key characters:  
+1. **Finnley 'Finn' Thatch** – A cheerful farmhand who loves animals and tells tall tales. (His place: **Lake**)  
+2. **Marlowe Reed** – A mysterious traveler who sells rare seeds and artifacts. (His place: **Tavern**)  
+3. **Elsie Bloom** – A kind-hearted botanist passionate about growing exotic plants. (Her place: **Field**)  
+4. **Jasper "Jas" Holt** – A laid-back fisherman who knows all the village gossip.  
+5. **Sylvia Pine** – A quiet carpenter who builds and repairs structures around town.  
+
+At the start of the game, **roles are randomly assigned** to the characters:  
+- **Murderer** → The character who committed the murder. Their personal statement should subtly hint at **a motive**, and their observation should provide a **false alibi** that conflicts with another character’s statement.  
+- **Victim** → The character who was murdered. (Do **not** generate dialogue for this character.)  
+- **Key Observer** → The character who **notices something important** that helps the player deduce the murderer. Their statement should **hint at an inconsistency in the murderer’s alibi.**  
+- **False Accuser** → This character **wrongly blames another character** for the crime. Their accusation should introduce **misdirection** but should not be entirely illogical.  
+- **Falsely Accused** → This character is **falsely accused** but has **a strong alibi** that contradicts the false accuser’s statement.  
+
+### **Instructions for Generating Dialogue:**  
+Each non-victim character should provide **two dialogues:**  
+
+1. **Personal Statement** → Provides an **alibi, motive, or suspicion** (this should hint at what the character was doing at the time of the murder).  
+2. **Observation Statement** → Their response to *“Have you seen anything unusual?”*  
+   - If they are the **murderer**, their observation should introduce a **false alibi** that **contradicts** another character’s statement.  
+   - If they are the **key observer**, their observation should highlight **an inconsistency** in the murderer’s story.  
+   - If they are the **false accuser**, they should **wrongly blame** another character (index 4).  
+   - If they are the **falsely accused**, their personal statement should provide a **clear alibi** that proves they are innocent.  
+
+### **Formatting for Parsing:**  
+Structure your response using the following format:  
+- Use **`###`** for sections.  
+- Use **`---`** to separate entries.  
+- Use **`::`** for key-value pairs.  
 
 
-message = "You are getting in front of the camera to report the weather for your town. What do you say?"
+"""
+)
+
+setuper = Setuper()
+charset = setuper.initRoles([-1, -1])
+
+print(charset)
+
+message = f"Murderer: {charset[0]["name"]}, victim: {charset[1]["name"]} key observer: {charset[2]["name"]}, false accuser {charset[3]["name"]} false accused {charset[4]["name"]}. DO NOT GENERATE DIALOGUE FOR {charset[1]["name"]} "
 
 answer, reasoning = llm.get_response(message)
 

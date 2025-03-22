@@ -1,22 +1,29 @@
 CHARACTERS = [
     {
         "name": "Finnley 'Finn' Thatch",
-        "description": "A cheerful farmhand who loves animals and tells tall tales."
+        "description": "A cheerful fisherman who loves animals and tells tall tales.",
+        "place": "lake"
     },
+     
     {
         "name": "Marlowe Reed",
-        "description": "A mysterious traveler who sells rare seeds and artifacts."
+        "description": "A mysterious traveler who sells rare seeds and artifacts.",
+        "place": "tavern"
     },
+
     {
         "name": "Elsie Bloom",
-        "description": "A kind-hearted botanist passionate about growing exotic plants."
+        "description": "A kind-hearted botanist passionate about growing exotic plants.",
+        "place": "field"
     },
     {
         "name": "Sylvia Pine",
-        "description": "A quiet carpenter who builds and repairs structures around town."
+        "description": "A quiet carpenter who builds and repairs structures around town.",
+        "place": "workshop"
     },
     {
         "name": "Garrick 'Garry' Ironwood",
-        "description": "A stern but loyal town guard who patrols the village on his trusty horse, Ember."
+        "description": "A stern but loyal town guard who patrols the village on his trusty horse, Ember.",
+        "place": "entrance"
     }
 ]
