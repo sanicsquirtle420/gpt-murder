@@ -6,14 +6,16 @@ screen = pygame.display.set_mode((1000 , 800) , pygame.RESIZABLE)
 clock = pygame.time.Clock()
 pygame.display.set_caption("Juno :D")
 
-def draw_window(sample_char , barrier):
+def draw_window(sample_char , barrier, npc):
     screen.fill((147,204,207))
     sample_char.draw(screen)
+    npc.draw(screen)
     pygame.draw.rect(screen , (189 , 52 , 235) , barrier , 10)
     pygame.display.update()
 
 def main():
     j: Juno = Juno(100,100 , speed=15)
+    npc: NPC = NPC(400, 100) 
     border = pygame.Rect(0, 0, screen.get_width(), screen.get_height())
     status: bool = True
     while status:
@@ -23,7 +25,8 @@ def main():
                 status = False
         keys = pygame.key.get_pressed()
         j.move(keys , border)
-        draw_window(j , border)
+        npc.move() 
+        draw_window(j , border, npc)
 
     pygame.quit()
 
@@ -56,6 +59,27 @@ class Juno(object):
 
     def draw(self, surface):
         surface.blit(self.img , (self.rect.x , self.rect.y))
+
+class NPC(object):
+    # NPC class
+    def __init__(self, x: int, y: int):
+        self.img = pygame.image.load("assets/kiriko-juno1.png").convert_alpha()  
+        self.img = pygame.transform.scale(self.img, (115, 115))
+        self.rect = pygame.Rect(x, y, self.img.get_width(), self.img.get_height())
+        self.speed = 5  
+        self.direction = 1 
+
+    def move(self):
+        # Move the NPC from top to bottom continuously
+        if self.rect.y >= 500:
+            self.direction = -1
+        elif self.rect.y <= 100:
+            self.direction = 1
+
+        self.rect.y += self.speed * self.direction
+
+    def draw(self, surface):
+        surface.blit(self.img, (self.rect.x, self.rect.y))
 
 if __name__ == "__main__":
     main()
