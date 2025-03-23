@@ -4,12 +4,7 @@ from utilities.support import *
 import math
 class Juno(object):
     # Player class
-
     def __init__(self , x: int , y: int , speed=1):
-        CURRENT_DIR = os.path.dirname(__file__)
-        ASSETS_DIR = os.path.join(CURRENT_DIR , ".." , "assets")
-        IMG_DIR = os.path.join(ASSETS_DIR , "kiriko-juno1.png")
-
         self.import_assets()
 
         self.status = 'down_idle'
@@ -86,5 +81,5 @@ class Juno(object):
     def distance_to(self, npc):
         return math.sqrt((npc.rect.x - self.rect.x) ** 2 + (npc.rect.y - self.rect.y) ** 2)
 
-    def draw(self, surface):
-        surface.blit(self.img , (self.rect.x , self.rect.y))
+    def draw(self, surface, off_x , off_y):
+        surface.blit(self.img , (self.rect.x - off_x , self.rect.y - off_y))
