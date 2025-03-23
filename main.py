@@ -51,11 +51,23 @@ def draw_window(player, npcs: list[NPC] , barrier , window , x , y):
     window.fill((147, 204, 207))
     max_x = window.get_width() * 2
     max_y = window.get_height() * 2
+    keys = pygame.key.get_pressed()
     pygame.draw.rect(window, (189,52,235) , (0 - x, 0 - y, max_x , max_y) , 10)
 
+    sample = ["welcome to orbit" , "let the kitsune guide you" , "i am ready to put on a show"]
+
     for npc in npcs:
-        npc.move(barrier , player , npcs)
-        npc.draw(window , x , y)
+        npc.move(barrier, player, npcs)
+        npc.draw(window, x, y)
+
+    sorted_npc = sorted(npcs , key=lambda npc: player.distance_to(npc))
+
+    for npc in sorted_npc:
+        if player.near_character(npc) and keys[pygame.K_p]:
+            font = pygame.font.SysFont("Arial" , 30)
+            text = font.render(sample[npcs.index(npc)] , False , (0,0,0))
+            window.blit(text , (25, window.get_height() - 100))
+            break
 
     window.blit(player.img , (player.rect.x - x , player.rect.y - y))
 
