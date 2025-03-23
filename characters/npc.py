@@ -4,10 +4,16 @@ import os
 from utilities.support import *
 
 class NPC(object):
-    def __init__(self, x: int, y: int, window):
+    def __init__(self, character, window):
         CURRENT_DIR = os.path.dirname(__file__)
         ASSETS_DIR = os.path.join(CURRENT_DIR, "..", "assets")
         IMG_DIR = os.path.join(ASSETS_DIR, "shakes.jpg")
+
+        x = character["init_pos"][0]
+        y = character["init_pos"][1]
+
+        self.name = character["name"]
+        self.movable_area = character["movable_area"]
 
         self.img = pygame.image.load(IMG_DIR).convert_alpha()
         self.img = pygame.transform.scale(self.img, (115, 115))
@@ -56,10 +62,10 @@ class NPC(object):
         direction = random.choice(directions)
         move_distance = random.randint(50, 100)  
 
-        min_x = self.rect.x - 200
-        max_x = self.rect.x + 200
-        min_y = self.rect.y - 200
-        max_y = self.rect.y + 200
+        min_x = self.rect.x
+        max_x = self.rect.x + self.movable_area[0]
+        min_y = self.rect.y
+        max_y = self.rect.y + self.movable_area[1]
 
         if direction == "up":
             self.target_y = max(self.rect.y - move_distance, min_y)
