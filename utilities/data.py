@@ -27,3 +27,5 @@ CHARACTERS = [
         "place": "entrance"
     }
 ]
+
+dialogues = []
