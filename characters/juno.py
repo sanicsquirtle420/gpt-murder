@@ -75,5 +75,12 @@ class Juno(object):
             self.rect.x = bar_x
             self.rect.y = bar_y
 
+    def near_character(self, npc) -> bool:
+        dist = math.sqrt((npc.rect.x - self.rect.x) ** 2 + (npc.rect.y - self.rect.y) ** 2)
+        return dist < npc.rect.x + 5 or dist < npc.rect.y + 5
+
+    def distance_to(self, npc):
+        return math.sqrt((npc.rect.x - self.rect.x) ** 2 + (npc.rect.y - self.rect.y) ** 2)
+
     def draw(self, surface):
         surface.blit(self.img , (self.rect.x , self.rect.y))
