@@ -66,13 +66,12 @@ class Juno(object):
         bar_y = self.rect.y + dy * self.speed
 
         tmp_rect = pygame.Rect(bar_x , bar_y , self.rect.width , self.rect.height)
-        for npc in npcs:
-            if tmp_rect.colliderect(npc.rect):
-                return
+   
 
         if barrier.contains(tmp_rect):
             self.rect.x = bar_x
             self.rect.y = bar_y
+
 
     def near_character(self, npc) -> bool:
         dist = math.sqrt((npc.rect.x - self.rect.x) ** 2 + (npc.rect.y - self.rect.y) ** 2)
