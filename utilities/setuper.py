@@ -66,4 +66,4 @@ class Setuper:
                 "Observation": observation.strip()
             })
 
-        dialogues = parsed_data
+        return(parsed_data)
