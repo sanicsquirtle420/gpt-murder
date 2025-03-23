@@ -26,7 +26,7 @@ def main():
         npcs.append(npc)
     border = pygame.Rect(0, 0, world_width, world_height)
     
-    # Creates a circular button in the top left corner
+    # Puts a button in the top left corner
     button_center = (50, 50)
     button_radius = 30
     show_text = False  # Control of text display
