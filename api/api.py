@@ -2,33 +2,25 @@ import os
 from dotenv import load_dotenv
 import openai
 from utilities.setuper import Setuper
+from utilities.data import characters
 
-
-
-#loading environment variables
+# Load environment variables
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
 IP = os.getenv("IP")
 
-
-class local:
+class Local:
     def __init__(self, host_ip, port_num, api_key_str):
         self.client = openai.Client(base_url=f"http://{host_ip}:{port_num}/v1", api_key=api_key_str)
         self.model_name = self.client.models.list().data[0].id
-
         self.history = []
-
         print(self.model_name)
 
     def append_to_history(self, role: str, data: str):
-        self.history.append({
-            "role": role,
-            "content": data
-        })
+        self.history.append({"role": role, "content": data})
 
     def get_response(self, message):
         self.append_to_history("user", message)
-
         response_stream = self.client.chat.completions.create(
             model=self.model_name,
             messages=self.history,
@@ -39,13 +31,13 @@ class local:
 
         reasoning = ""
         answer = ""
-        hasContentStarted = False ; hasReasonStarted = False
+        hasContentStarted = False
+        hasReasonStarted = False
 
         for chunk in response_stream:
             if chunk.choices[0].delta.content:
                 if not hasContentStarted:
                     hasContentStarted = True
-
                     print("\n~~~ END OF REASONING ~~~")
                     print("\n~~~ BEGINNING OF ANSWER ~~~")
 
@@ -58,96 +50,89 @@ class local:
                     print("\n~~~ BEGINNING OF REASONING ~~~")
                 print(chunk.choices[0].delta.reasoning_content, end="")
                 reasoning += chunk.choices[0].delta.reasoning_content
-        print("\n~~~ END OF ANSWER ~~~")
 
+        print("\n~~~ END OF ANSWER ~~~")
         return answer, reasoning
 
 
-
-print(API_KEY)
-
-
-
-llm = local(IP, 50001, API_KEY)
+def main():
+    """Main function to initialize game setup and fetch NPC dialogues before the game starts."""
+    print("Loading API Key...")
+    print(API_KEY)
 
 
+    llm = Local(IP, 50001, API_KEY)
 
 
-
-setuper = Setuper()
-charset = setuper.initRoles([-1,-1])
-
-print(charset)
-
-message = f"""
-You are generating in-game dialogues for a mystery murder game set on a farm. There are four remaining NPCs, each with a predefined role. 
-
-Here are the profiles for each character:
-
-Finnley "Finn" Thatch – A cheerful farmhand who loves animals and tells tall tales.
-
-Marlowe Reed – A mysterious traveler who sells rare seeds and artifacts.
-
-Elsie Bloom – A kind-hearted botanist passionate about growing exotic plants.
-
-Jasper "Jas" Holt – A laid-back fisherman who knows all the village gossip.
-
-Sylvia Pine – A quiet carpenter who builds and repairs structures around town. 
+    setuper = Setuper()
+    charset = setuper.initRoles()
+    print("Game roles initialized:", charset)
 
 
-Generate two pieces of dialogue for each:
-Personal Statement: Their own alibi or view on the situation.
-Observation: A piece of information they noticed about the crime scene or another character.
+    message = f"""
+    You are generating in-game dialogues for a mystery murder game set on a farm. There are four remaining NPCs, each with a predefined role. 
 
-Observation should not be direct accusation, just hints
+    Here are the profiles for each character:
 
-Each role follows these specific rules:
+    Finnley "Finn" Thatch – A cheerful farmhand who loves animals and tells tall tales.
+    Marlowe Reed – A mysterious traveler who sells rare seeds and artifacts.
+    Elsie Bloom – A kind-hearted botanist passionate about growing exotic plants.
+    Jasper "Jas" Holt – A laid-back fisherman who knows all the village gossip.
+    Sylvia Pine – A quiet carpenter who builds and repairs structures around town. 
 
-Murderer: Their observation must introduce a false alibi that contradicts another character’s statement.
+    Generate two pieces of dialogue for each:
+    Personal Statement: Their own alibi or view on the situation.
+    Observation: A piece of information they noticed about the crime scene or another character.
 
-Key Observer: Their observation must highlight an inconsistency in the murderer’s story, but they should not realize that murderer is being accused.
+    Observation should not be a direct accusation, just hints.
 
-False Accuser: Their observation must wrongly blame another character.
+    Each role follows these specific rules:
+    - **Murderer**: Their observation must introduce a false alibi that contradicts another character’s statement.
+    - **Key Observer**: Their observation must highlight an inconsistency in the murderer's story.
+    - **False Accuser**: Their observation must wrongly blame another character.
+    - **Falsely Accused**: Their personal statement should provide a clear alibi proving their innocence.
 
-Falsely Accused: Their personal statement should provide a clear alibi proving their innocence.
+    Present responses in the following format:
 
-Ensure the responses are immersive and fit each character's personality. Present them in the following strict format:
+    ###
+    name::[Character Name]  
+    Personal Statement::[Character's personal statement]  
+    Observation::[Character's observation]  
+    ###  
 
-###
-name::[Character Name]  
-Personal Statement::[Character's personal statement]  
-Observation::[Character's observation]  
-###  
-Example Output:
-###
-name::Jasper "Jas" Holt  
-Personal Statement::I was out by the river fishing all morning. Didn’t see a soul until I came back to the farm.  
-Observation::Strange thing is, Finn says he was in the barn the whole time, but I saw someone in a dark coat near the tool shed.  
-###  
+    Now, generate responses following this format for these roles:
+    Victim is {characters[charset[1]]["name"]}. YOU DO NOT NEED TO GENERATE ANY DIALOGUES FOR HER.
+
+    {characters[charset[0]]["name"]} is the **Murderer**.
+    {characters[charset[2]]["name"]} is a **Key Observer**.
+    {characters[charset[3]]["name"]} is a **Wrong Accuser**.
+    {characters[charset[4]]["name"]} is **Wrongly Accused**.
+
+    """
 
 
-Now, generate responses following this format for these roles:
-Victim is {charset[1]["name"]}. YOU DO NOT NEED TO GENERATE ANY DIALOGUES FOR HER
+    print("Generating dialogues...")
+    answer, reasoning = llm.get_response(message)
 
-{charset[0]["name"]} is a MURDERER. Their personal statement should tell something about their character, or motive. They should not directly show hostility towards victim
-Their observation can be an alibi. 
+    print("\nGenerated Dialogue:\n", answer)
 
-{charset[2]["name"]} is A KEY OBSERVER. Their personal statement should tell something about their character.
-Their observation should be something that CONTRADICTS alibi of Murderer,  who is {charset[0]["name"]}
+  
+    res = setuper.parse_dialogue(answer)
+    res.sort(key=lambda x: x['name'])
 
-{charset[3]["name"]} is A WRONG ACCUSER. Their personal statement should tell something about their character.
-Their observation should be something that WRONGLY ACCUSES  {charset[4]["name"]}.
+    print(f"before len {len(characters)}, chars {characters}")
 
-{charset[4]["name"]} IS A WRONG ACCUSED. Their personal statement should tell something about their character.
-Their observation should be something that EXPLAINS accusation of {charset[3]["name"]}
+    characters.remove(characters[charset[1]])
 
-"""
+    print(f"after len {len(characters)}, chars {characters}")
 
-answer, reasoning = llm.get_response(message)
+
+    print(f"Parsed Dialogues (Count: {len(res)}):\n{res}")
+    
 
 
 
 
-print(type(answer))
-res = setuper.parse_dialogue(answer)
-print(f"Length: {len(res)}\n{res}")
+
+if __name__ == "__main__":
+    main()
