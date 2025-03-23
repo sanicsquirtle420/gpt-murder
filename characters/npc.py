@@ -58,63 +58,50 @@ class NPC(object):
         self.img = self.animations[self.status][int(self.frame_index)]
 
     def move(self):
-        
-        # Check if current position is outside movable area
-        min_x = self.initX
-        max_x = self.initX + self.movable_area[0]
-        min_y = self.initY
-        max_y = self.initY + self.movable_area[1]
-
-        if self.rect.x < min_x:
-            self.rect.x = min_x
-            self.target_x = min_x
-        elif self.rect.x > max_x:
-            self.rect.x = max_x
-            self.target_x = max_x
-        if self.rect.y < min_y:
-            self.rect.y = min_y
-            self.target_y = min_y
-        elif self.rect.y > max_y:
-            self.rect.y = max_y
-            self.target_y = max_y
-        """Handles smooth movement towards a target position."""
+        """Handles smooth movement within the defined movable area."""
         current_time = pygame.time.get_ticks()
-
-        
-
-       
+    
+        # If NPC is still moving, let it continue
         if self.rect.x != self.target_x or self.rect.y != self.target_y:
             self.smooth_move()
             return
-
-       
+    
+        # If NPC has reached the target and still needs to wait, don't move yet
         if current_time - self.last_move_time < self.wait_time:
             return
-
-        
-
+    
+        # Choose a direction to move
         directions = ["up", "down", "left", "right"]
-
-        direction = random.choice(directions)
-        move_distance = random.randint(50, 100)  
-
-
-
-        if direction == "up":
-            self.target_y = max(self.rect.y - move_distance, min_y)
-            self.status = "up"
-        elif direction == "down":
-            self.target_y = min(self.rect.y + move_distance, max_y)
-            self.status = "down"
-        elif direction == "left":
-            self.target_x = max(self.rect.x - move_distance, min_x)
-            self.status = "left"
-        elif direction == "right":
-            self.target_x = min(self.rect.x + move_distance, max_x)
-            self.status = "right"
-
-        self.last_move_time = current_time
-        self.wait_time = random.randint(5000, 8000)  
+        random.shuffle(directions)  # Randomize direction choice
+    
+        move_distance = random.randint(50, 100)
+    
+        # Define possible new target positions within the allowed area
+        for direction in directions:
+            if direction == "up":
+                new_target_y = max(self.initY, self.rect.y - move_distance)
+                if new_target_y != self.rect.y:
+                    self.target_y = new_target_y
+                    self.status = "up"
+                    break
+            elif direction == "down":
+                new_target_y = min(self.initY + self.movable_area[1], self.rect.y + move_distance)
+                if new_target_y != self.rect.y:
+                    self.target_y = new_target_y
+                    self.status = "down"
+                    break
+            elif direction == "left":
+                new_target_x = max(self.initX, self.rect.x - move_distance)
+                if new_target_x != self.rect.x:
+                    self.target_x = new_target_x
+                    self.status = "left"
+                    break
+            elif direction == "right":
+                new_target_x = min(self.initX + self.movable_area[0], self.rect.x + move_distance)
+                if new_target_x != self.rect.x:
+                    self.target_x = new_target_x
+                    self.status = "right"
+                    break
 
     def smooth_move(self):
         """Moves the NPC smoothly towards the target position."""
