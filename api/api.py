@@ -4,6 +4,7 @@ import openai
 from utilities.setuper import Setuper
 
 
+
 #loading environment variables
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
@@ -147,10 +148,6 @@ answer, reasoning = llm.get_response(message)
 
 print(answer)
 
-def parse_answer(answer):
-    parsed_answer = {}
-    
-    
-    
+print(type(answer))
 
-print(answer)
+print(setuper.parse_dialogue(answer))

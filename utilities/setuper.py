@@ -1,11 +1,13 @@
 import random
-from utilities.data import CHARACTERS
+from utilities.data import CHARACTERS, dialogues
+import re
 
 class Setuper:
     def __init__(self):
         self.characters = CHARACTERS
     
     def initRoles(self, previous):
+        
 
         """
         This function initialized roles
@@ -48,3 +50,20 @@ class Setuper:
 
         
         return (self.characters[murderer_index], self.characters[victim_index], self.characters[key_observer_index], self.characters[false_accuser], self.characters[has_alibi])
+    
+
+    def parse_dialogue(self, text):
+        pattern = re.compile(r"###\s*name::(?P<name>.*?)\s*Personal Statement::(?P<personal_statement>.*?)\s*Observation::(?P<observation>.*?)\s*###", re.DOTALL)
+        matches = pattern.findall(text)
+
+        parsed_data = []
+
+        for match in matches:
+            name, personal_statement, observation = match
+            parsed_data.append({
+                "name": name.strip(),
+                "Personal Statement": personal_statement.strip(),
+                "Observation": observation.strip()
+            })
+
+        dialogues = parsed_data
