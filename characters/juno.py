@@ -44,16 +44,16 @@ class Juno(object):
     def move(self , keys , barrier , npcs) -> None:
         dx , dy = 0 , 0
 
-        if keys[pygame.K_a]:
+        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             dx -= 1
             self.status = 'left'
-        if keys[pygame.K_d]:
+        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             dx += 1
             self.status = 'right'
-        if keys[pygame.K_w]:
+        if keys[pygame.K_w] or keys[pygame.K_UP]:
             dy -= 1
             self.status = 'up'
-        if keys[pygame.K_s]:
+        if keys[pygame.K_s] or keys[pygame.K_DOWN]:
             dy += 1
             self.status = 'down'
         if keys[pygame.K_q]:
