@@ -5,10 +5,6 @@ from utilities.support import *
 
 class NPC(object):
     def __init__(self, character, window):
-
-        self.import_assets()
-        
-
         x = character["init_pos"][0]
         y = character["init_pos"][1]
 
@@ -16,6 +12,9 @@ class NPC(object):
         self.initY = y
 
         self.name = character["name"]
+        self.spriteDir = character["spriteDir"]
+        
+        self.import_assets()
         self.spriteDir = character["spriteDir"]
         self.movable_area = character["movable_area"]
         self.status = "down_idle"
@@ -40,15 +39,12 @@ class NPC(object):
         self.target_y = y
 
     def import_assets(self):
-        if self.name != "Garrick 'Garry' Ironwood":
-            self.animations = {
-            'up': [], 'down': [], 'left': [], 'right': [], 'down_idle': [], 
-            'right_idle': [], 'up_idle': [], 'left_idle': []
+
+
+        self.animations = {
+        'up': [], 'down': [], 'left': [], 'right': [], 'down_idle': [], 
+        'right_idle': [], 'up_idle': [], 'left_idle': []
         }
-        else:
-            self.animation = {
-                'left': [], 'right': [], 'right_idle': [], 'left_idle': []
-            }
         
         for animation in self.animations.keys():
             full_path = f"assets/animations/{self.spriteDir}/{animation}"
@@ -62,47 +58,50 @@ class NPC(object):
         self.img = self.animations[self.status][int(self.frame_index)]
 
     def move(self):
-
-        """Handles smooth movement towards a target position."""
+        """Handles smooth movement within the defined movable area."""
         current_time = pygame.time.get_ticks()
-
-       
+    
+        # If NPC is still moving, let it continue
         if self.rect.x != self.target_x or self.rect.y != self.target_y:
             self.smooth_move()
             return
-
-       
+    
+        # If NPC has reached the target and still needs to wait, don't move yet
         if current_time - self.last_move_time < self.wait_time:
             return
-
-        
-        if self.name != "Garrick 'Garry' Ironwood":
-            directions = ["up", "down", "left", "right"]
-        else:
-            direction = ["left", "right"]
-        direction = random.choice(directions)
-        move_distance = random.randint(50, 100)  
-
-        min_x = self.initX
-        max_x = self.initX + self.movable_area[0]
-        min_y = self.initY
-        max_y = self.initY + self.movable_area[1]
-
-        if direction == "up":
-            self.target_y = max(self.rect.y - move_distance, min_y)
-            self.status = "up"
-        elif direction == "down":
-            self.target_y = min(self.rect.y + move_distance, max_y)
-            self.status = "down"
-        elif direction == "left":
-            self.target_x = max(self.rect.x - move_distance, min_x)
-            self.status = "left"
-        elif direction == "right":
-            self.target_x = min(self.rect.x + move_distance, max_x)
-            self.status = "right"
-
-        self.last_move_time = current_time
-        self.wait_time = random.randint(5000, 8000)  
+    
+        # Choose a direction to move
+        directions = ["up", "down", "left", "right"]
+        random.shuffle(directions)  # Randomize direction choice
+    
+        move_distance = random.randint(50, 100)
+    
+        # Define possible new target positions within the allowed area
+        for direction in directions:
+            if direction == "up":
+                new_target_y = max(self.initY, self.rect.y - move_distance)
+                if new_target_y != self.rect.y:
+                    self.target_y = new_target_y
+                    self.status = "up"
+                    break
+            elif direction == "down":
+                new_target_y = min(self.initY + self.movable_area[1], self.rect.y + move_distance)
+                if new_target_y != self.rect.y:
+                    self.target_y = new_target_y
+                    self.status = "down"
+                    break
+            elif direction == "left":
+                new_target_x = max(self.initX, self.rect.x - move_distance)
+                if new_target_x != self.rect.x:
+                    self.target_x = new_target_x
+                    self.status = "left"
+                    break
+            elif direction == "right":
+                new_target_x = min(self.initX + self.movable_area[0], self.rect.x + move_distance)
+                if new_target_x != self.rect.x:
+                    self.target_x = new_target_x
+                    self.status = "right"
+                    break
 
     def smooth_move(self):
         """Moves the NPC smoothly towards the target position."""
