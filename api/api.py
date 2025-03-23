@@ -126,6 +126,10 @@ def main():
 
     print(f"after len {len(characters)}, chars {characters}")
 
+    for i in range(characters):
+        characters[i]["dialogues"].append(res[i]["Personal Statement"])
+        characters[i]["dialogues"].append(res[i]["Observation"])
+
 
     print(f"Parsed Dialogues (Count: {len(res)}):\n{res}")
     
