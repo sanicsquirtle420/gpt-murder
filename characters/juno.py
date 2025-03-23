@@ -61,6 +61,9 @@ class Juno(object):
         if dx != 0 and dy != 0:
             dx *= 0.7071
             dy *= 0.7071
+        
+        if dx == 0 and dy == 0:
+            self.status = self.status.split('_')[0] + '_idle'
 
         bar_x = self.rect.x + dx * self.speed
         bar_y = self.rect.y + dy * self.speed

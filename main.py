@@ -25,7 +25,7 @@ def main():
     status: bool = True
     while status:
         clock.tick(60)
-        dt = clock.tick() / 1000
+        dt = clock.tick(60) / 1000
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 status = False
