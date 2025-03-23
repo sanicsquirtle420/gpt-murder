@@ -40,12 +40,18 @@ class NPC(object):
         self.target_y = y
 
     def import_assets(self):
-        self.animations = {
+        if self.name != "Garrick 'Garry' Ironwood":
+            self.animations = {
             'up': [], 'down': [], 'left': [], 'right': [], 'down_idle': [], 
             'right_idle': [], 'up_idle': [], 'left_idle': []
         }
+        else:
+            self.animation = {
+                'left': [], 'right': [], 'right_idle': [], 'left_idle': []
+            }
+        
         for animation in self.animations.keys():
-            full_path = f"assets/animations/finn/{animation}"
+            full_path = f"assets/animations/{self.spriteDir}/{animation}"
             self.animations[animation] = import_folder(full_path)
 
     def animate(self, dt):
@@ -61,55 +67,58 @@ class NPC(object):
         current_time = pygame.time.get_ticks()
 
        
-        # if self.rect.x != self.target_x or self.rect.y != self.target_y:
-        #     self.smooth_move()
-        #     return
+        if self.rect.x != self.target_x or self.rect.y != self.target_y:
+            self.smooth_move()
+            return
 
        
-        # if current_time - self.last_move_time < self.wait_time:
-        #     return
+        if current_time - self.last_move_time < self.wait_time:
+            return
 
         
-        # directions = ["up", "down", "left", "right"]
-        # direction = random.choice(directions)
-        # move_distance = random.randint(50, 100)  
+        if self.name != "Garrick 'Garry' Ironwood":
+            directions = ["up", "down", "left", "right"]
+        else:
+            direction = ["left", "right"]
+        direction = random.choice(directions)
+        move_distance = random.randint(50, 100)  
 
-        # min_x = self.initX
-        # max_x = self.initX + self.movable_area[0]
-        # min_y = self.initY
-        # max_y = self.initY + self.movable_area[1]
+        min_x = self.initX
+        max_x = self.initX + self.movable_area[0]
+        min_y = self.initY
+        max_y = self.initY + self.movable_area[1]
 
-        # if direction == "up":
-        #     self.target_y = max(self.rect.y - move_distance, min_y)
-        #     self.status = "up"
-        # elif direction == "down":
-        #     self.target_y = min(self.rect.y + move_distance, max_y)
-        #     self.status = "down"
-        # elif direction == "left":
-        #     self.target_x = max(self.rect.x - move_distance, min_x)
-        #     self.status = "left"
-        # elif direction == "right":
-        #     self.target_x = min(self.rect.x + move_distance, max_x)
-        #     self.status = "right"
+        if direction == "up":
+            self.target_y = max(self.rect.y - move_distance, min_y)
+            self.status = "up"
+        elif direction == "down":
+            self.target_y = min(self.rect.y + move_distance, max_y)
+            self.status = "down"
+        elif direction == "left":
+            self.target_x = max(self.rect.x - move_distance, min_x)
+            self.status = "left"
+        elif direction == "right":
+            self.target_x = min(self.rect.x + move_distance, max_x)
+            self.status = "right"
 
-        # self.last_move_time = current_time
-        # self.wait_time = random.randint(5000, 8000)  
+        self.last_move_time = current_time
+        self.wait_time = random.randint(5000, 8000)  
 
-    # def smooth_move(self):
-    #     """Moves the NPC smoothly towards the target position."""
-    #     if self.rect.x < self.target_x:
-    #         self.rect.x += min(self.speed, self.target_x - self.rect.x)
-    #     elif self.rect.x > self.target_x:
-    #         self.rect.x -= min(self.speed, self.rect.x - self.target_x)
+    def smooth_move(self):
+        """Moves the NPC smoothly towards the target position."""
+        if self.rect.x < self.target_x:
+            self.rect.x += min(self.speed, self.target_x - self.rect.x)
+        elif self.rect.x > self.target_x:
+            self.rect.x -= min(self.speed, self.rect.x - self.target_x)
 
-    #     if self.rect.y < self.target_y:
-    #         self.rect.y += min(self.speed, self.target_y - self.rect.y)
-    #     elif self.rect.y > self.target_y:
-    #         self.rect.y -= min(self.speed, self.rect.y - self.target_y)
+        if self.rect.y < self.target_y:
+            self.rect.y += min(self.speed, self.target_y - self.rect.y)
+        elif self.rect.y > self.target_y:
+            self.rect.y -= min(self.speed, self.rect.y - self.target_y)
 
         
-    #     if self.rect.x == self.target_x and self.rect.y == self.target_y:
-    #         self.status = self.status.split('_')[0] + '_idle'
+        if self.rect.x == self.target_x and self.rect.y == self.target_y:
+            self.status = self.status.split('_')[0] + '_idle'
 
     def draw(self, surface, x, y):
         surface.blit(self.img, (self.rect.x - x, self.rect.y - y))
