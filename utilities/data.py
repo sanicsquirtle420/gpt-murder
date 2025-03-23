@@ -29,7 +29,7 @@ CHARACTERS = [
         "place": "tavern",
         "spriteDir": "reed",
         "init_pos": (1900, 600),
-        "movable_area": (-500, -200)
+        "movable_area": (400, 200)
     },
     {
         "name": "Garrick 'Garry' Ironwood",

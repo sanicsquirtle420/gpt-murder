@@ -40,15 +40,11 @@ class NPC(object):
 
     def import_assets(self):
 
-        if self.name != "Garrick 'Garry' Ironwood":
-            self.animations = {
-            'up': [], 'down': [], 'left': [], 'right': [], 'down_idle': [], 
-            'right_idle': [], 'up_idle': [], 'left_idle': []
+
+        self.animations = {
+        'up': [], 'down': [], 'left': [], 'right': [], 'down_idle': [], 
+        'right_idle': [], 'up_idle': [], 'left_idle': []
         }
-        else:
-            self.animation = {
-                'left': [], 'right': [], 'right_idle': [], 'left_idle': []
-            }
         
         for animation in self.animations.keys():
             full_path = f"assets/animations/{self.spriteDir}/{animation}"
@@ -62,9 +58,29 @@ class NPC(object):
         self.img = self.animations[self.status][int(self.frame_index)]
 
     def move(self):
+        
+        # Check if current position is outside movable area
+        min_x = self.initX
+        max_x = self.initX + self.movable_area[0]
+        min_y = self.initY
+        max_y = self.initY + self.movable_area[1]
 
+        if self.rect.x < min_x:
+            self.rect.x = min_x
+            self.target_x = min_x
+        elif self.rect.x > max_x:
+            self.rect.x = max_x
+            self.target_x = max_x
+        if self.rect.y < min_y:
+            self.rect.y = min_y
+            self.target_y = min_y
+        elif self.rect.y > max_y:
+            self.rect.y = max_y
+            self.target_y = max_y
         """Handles smooth movement towards a target position."""
         current_time = pygame.time.get_ticks()
+
+        
 
        
         if self.rect.x != self.target_x or self.rect.y != self.target_y:
@@ -76,17 +92,13 @@ class NPC(object):
             return
 
         
-        if self.name != "Garrick 'Garry' Ironwood":
-            directions = ["up", "down", "left", "right"]
-        else:
-            direction = ["left", "right"]
+
+        directions = ["up", "down", "left", "right"]
+
         direction = random.choice(directions)
         move_distance = random.randint(50, 100)  
 
-        min_x = self.initX
-        max_x = self.initX + self.movable_area[0]
-        min_y = self.initY
-        max_y = self.initY + self.movable_area[1]
+
 
         if direction == "up":
             self.target_y = max(self.rect.y - move_distance, min_y)
