@@ -9,6 +9,7 @@ def import_folder(path):
         for image in img_files:
             full_path = f"{path}/{image}"
             image_surf = pygame.image.load(full_path).convert_alpha()
+            print(f"Path is {full_path}")
             surface_list.append(image_surf)
     
     return surface_list

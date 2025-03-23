@@ -5,10 +5,6 @@ from utilities.support import *
 
 class NPC(object):
     def __init__(self, character, window):
-
-        self.import_assets()
-        
-
         x = character["init_pos"][0]
         y = character["init_pos"][1]
 
@@ -16,6 +12,9 @@ class NPC(object):
         self.initY = y
 
         self.name = character["name"]
+        self.spriteDir = character["spriteDir"]
+        
+        self.import_assets()
         self.spriteDir = character["spriteDir"]
         self.movable_area = character["movable_area"]
         self.status = "down_idle"
@@ -40,6 +39,7 @@ class NPC(object):
         self.target_y = y
 
     def import_assets(self):
+
         if self.name != "Garrick 'Garry' Ironwood":
             self.animations = {
             'up': [], 'down': [], 'left': [], 'right': [], 'down_idle': [], 
