@@ -26,10 +26,10 @@ def main():
         npcs.append(npc)
     border = pygame.Rect(0, 0, world_width, world_height)
     
-    # Button settings (moved to left corner and made circular)
+    # Creates a circular button in the top left corner
     button_center = (50, 50)
     button_radius = 30
-    show_text = False  # Flag to control text display
+    show_text = False  # Control of text display
     
     status: bool = True
     while status:
@@ -80,14 +80,14 @@ def draw_window(player, npcs: list[NPC], barrier, window, x, y, button_center, b
             window.blit(text, (25, window.get_height() - 100))
             break
     
-    # Draw circular button
+    # Making a circular button
     pygame.draw.circle(window, (0, 150, 255), button_center, button_radius)
     font = pygame.font.SysFont("Arial", 20)
     text_surface = font.render("B", True, (255, 255, 255))
     text_rect = text_surface.get_rect(center=button_center)
     window.blit(text_surface, text_rect)
     
-    # Display text on button click
+    # Show text after clicking button
     if show_text:
         text_box = pygame.Rect(50, 50, 300, 100)
         pygame.draw.rect(window, (255, 255, 255), text_box)
