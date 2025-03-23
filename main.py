@@ -25,6 +25,7 @@ def main():
     status: bool = True
     while status:
         clock.tick(60)
+        dt = clock.tick() / 1000
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 status = False
@@ -34,6 +35,7 @@ def main():
                 border = pygame.Rect(0, 0, world_width, world_height)
         keys = pygame.key.get_pressed()
         j.move(keys, border , npcs)
+        j.animate(dt)
         offset_x = max(0, min(j.rect.x - win.get_width() // 2 + j.rect.width // 2, world_width - win.get_width()))
         offset_y = max(0, min(j.rect.y - win.get_height() // 2 + j.rect.height // 2, world_height - win.get_height()))
 

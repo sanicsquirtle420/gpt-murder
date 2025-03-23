@@ -1,6 +1,6 @@
 import pygame
 import os
-
+from utilities.support import *
 class Juno(object):
     # Player class
     def __init__(self , x: int , y: int , speed=1):
@@ -8,22 +8,53 @@ class Juno(object):
         ASSETS_DIR = os.path.join(CURRENT_DIR , ".." , "assets")
         IMG_DIR = os.path.join(ASSETS_DIR , "kiriko-juno1.png")
 
-        self.img = pygame.image.load(IMG_DIR).convert_alpha()
-        self.img = pygame.transform.scale(self.img , (115,115))
+        self.import_assets()
+
+        self.status = 'down_idle'
+        self.frame_index = 0
+
+        self.img = self.animations[self.status][self.frame_index]
         self.rect = pygame.Rect(x,y , self.img.get_width() , self.img.get_height())
         self.speed = speed
+        
+
+    def import_assets(self):
+        self.animations = {
+            'up': [],'down': [],'left': [],'right': [],
+			'right_idle':[],'left_idle':[],'up_idle':[],'down_idle':[],
+			'right_hoe':[],'left_hoe':[],'up_hoe':[],'down_hoe':[],
+			'right_axe':[],'left_axe':[],'up_axe':[],'down_axe':[],
+			'right_water':[],'left_water':[],'up_water':[],'down_water':[]
+        }
+
+        for animation in self.animations.keys():
+            full_path = f"assets/animations/main_character/{animation}"
+            self.animations[animation] = import_folder(full_path)
+
+    def animate(self, dt):
+        self.frame_index += 4 * dt
+        
+        if self.frame_index >= len(self.animations[self.status]):
+            self.frame_index = 0
+        
+        self.img = self.animations[self.status][int(self.frame_index)]
+    
 
     def move(self , keys , barrier , npcs) -> None:
         dx , dy = 0 , 0
 
         if keys[pygame.K_a]:
             dx -= 1
+            self.status = 'left'
         if keys[pygame.K_d]:
             dx += 1
+            self.status = 'right'
         if keys[pygame.K_w]:
             dy -= 1
+            self.status = 'up'
         if keys[pygame.K_s]:
             dy += 1
+            self.status = 'down'
         if keys[pygame.K_q]:
             pygame.quit()
 
