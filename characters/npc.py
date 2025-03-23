@@ -1,6 +1,7 @@
 import random
 import pygame
 import os
+from utilities.support import *
 
 class NPC(object):
     def __init__(self, x: int, y: int , window):
@@ -12,20 +13,33 @@ class NPC(object):
         self.img = pygame.transform.scale(self.img, (115, 115))
         self.window = window
         self.rect = pygame.Rect(x, y, self.img.get_width(), self.img.get_height())
-        self.target_x , self.target_y = self.get_new_spot()
-        self.speed = 5
+
         self.direction = 1
-        # time tracking
-        self.last_time = pygame.time.get_ticks()
-        self.next_change = self.last_time + 30000
+        self.status = "down_idle"
+        self.frame_index = 0
+
+        
+    
+    def import_assets(self):
+        self.animations = {
+            'up': [],'down': [],'left': [],'right': [], 'down_idle':[],
+        }
+
+        for animation in self.animations.keys():
+            full_path = f"assets/animations/finn/{animation}"
+            self.animations[animation] = import_folder(full_path)
+
+
+    def animate(self, dt):
+        self.frame_index += 4 * dt
+
+        if self.frame_index >= len(self.animations[self.status]):
+            self.frame_index = 0
+        
+        self.img = self.animations[self.status][int(self.frame_index)]
+
 
     def move(self, barrier , player , npcs):
-        current_time = pygame.time.get_ticks()
-        if current_time >= self.next_change:
-            self.target_x , self.target_y = self.get_new_spot()
-            self.last_time = current_time
-            # updates after 1 minute and 5 - 20 seconds
-            self.next_change = current_time + random.randint(5000 , 20000)
 
         if self.rect.x < self.target_x:
             dx = min(self.speed, self.target_x - self.rect.x)
