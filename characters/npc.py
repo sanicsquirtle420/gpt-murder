@@ -20,7 +20,7 @@ class NPC(object):
         self.status = "down_idle"
         self.frame_index = 0
 
-        self.scale = 5  # You can adjust this value to change the size
+        self.scale = 5  # Adjustable to change size
         self.animations = {status: [pygame.transform.scale(img, (img.get_width() * self.scale, img.get_height() * self.scale)) 
                                   for img in frames] 
                           for status, frames in self.animations.items()}
@@ -61,22 +61,22 @@ class NPC(object):
         """Handles smooth movement within the defined movable area."""
         current_time = pygame.time.get_ticks()
     
-        # If NPC is still moving, let it continue
+        # If the NPC is moving it continues
         if self.rect.x != self.target_x or self.rect.y != self.target_y:
             self.smooth_move()
             return
     
-        # If NPC has reached the target and still needs to wait, don't move yet
+        # NPC stops once it reaches the target
         if current_time - self.last_move_time < self.wait_time:
             return
     
-        # Choose a direction to move
+        # Directions of movement
         directions = ["up", "down", "left", "right"]
-        random.shuffle(directions)  # Randomize direction choice
+        random.shuffle(directions)  # direction randomizer
     
         move_distance = random.randint(50, 100)
     
-        # Define possible new target positions within the allowed area
+        # Establishes a target for the npc to move to within the map
         for direction in directions:
             if direction == "up":
                 new_target_y = max(self.initY, self.rect.y - move_distance)

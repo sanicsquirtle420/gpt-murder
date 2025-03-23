@@ -146,8 +146,8 @@ Their observation should be something that EXPLAINS accusation of {charset[3]["n
 answer, reasoning = llm.get_response(message)
 
 
-print(answer)
+
 
 print(type(answer))
-
-print(setuper.parse_dialogue(answer))
+res = setuper.parse_dialogue(answer)
+print(f"Length: {len(res)}\n{res}")

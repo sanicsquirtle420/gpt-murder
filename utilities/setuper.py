@@ -26,7 +26,7 @@ class Setuper:
         
 
         
-        #choosing murderer and victim
+        #Chooses random murderer and victim
         possible_choices = [i for i in range(5)]
 
 
