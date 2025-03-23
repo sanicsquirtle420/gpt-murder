@@ -79,10 +79,3 @@ def draw_window(player, npcs: list[NPC] , barrier , window , x , y):
 
 if __name__ == "__main__":
     main()
-
-    window.blit(player.img , (player.rect.x - x , player.rect.y - y))
-
-    pygame.display.update()
-
-if __name__ == "__main__":
-    main()
