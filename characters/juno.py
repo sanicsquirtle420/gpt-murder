@@ -1,6 +1,7 @@
 import pygame
 import os
 from utilities.support import *
+import math
 class Juno(object):
     # Player class
 
@@ -63,6 +64,9 @@ class Juno(object):
             dx *= 0.7071
             dy *= 0.7071
 
+        if dx == 0 and dy == 0:
+            self.status = self.status.split('_')[0] + '_idle'
+
         bar_x = self.rect.x + dx * self.speed
         bar_y = self.rect.y + dy * self.speed
 
@@ -74,6 +78,13 @@ class Juno(object):
         if barrier.contains(tmp_rect):
             self.rect.x = bar_x
             self.rect.y = bar_y
+
+    def near_character(self, npc) -> bool:
+        dist = math.sqrt((npc.rect.x - self.rect.x) ** 2 + (npc.rect.y - self.rect.y) ** 2)
+        return dist < npc.rect.x + 5 or dist < npc.rect.y + 5
+
+    def distance_to(self, npc):
+        return math.sqrt((npc.rect.x - self.rect.x) ** 2 + (npc.rect.y - self.rect.y) ** 2)
 
     def draw(self, surface):
         surface.blit(self.img , (self.rect.x , self.rect.y))
