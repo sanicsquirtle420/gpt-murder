@@ -3,6 +3,7 @@ import os
 from utilities.support import *
 class Juno(object):
     # Player class
+
     def __init__(self , x: int , y: int , speed=1):
         CURRENT_DIR = os.path.dirname(__file__)
         ASSETS_DIR = os.path.join(CURRENT_DIR , ".." , "assets")
@@ -61,9 +62,6 @@ class Juno(object):
         if dx != 0 and dy != 0:
             dx *= 0.7071
             dy *= 0.7071
-        
-        if dx == 0 and dy == 0:
-            self.status = self.status.split('_')[0] + '_idle'
 
         bar_x = self.rect.x + dx * self.speed
         bar_y = self.rect.y + dy * self.speed
