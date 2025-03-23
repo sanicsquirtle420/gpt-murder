@@ -15,7 +15,12 @@ def main():
     for i in range(3):
         rand_x = random.randint(15 , world_width - 15)
         rand_y = random.randint(15 , world_height - 15)
-        npcs.append(NPC(rand_x , rand_y , win))
+        npc = NPC(rand_x , rand_y, win)
+        if npc.rect.right > world_width:
+            npc.rect.right = world_width
+        if npc.rect.bottom > world_height:
+            npc.rect.bottom = world_height
+        npcs.append(npc)
     border = pygame.Rect(0, 0, world_width, world_height)
     status: bool = True
     while status:
@@ -31,6 +36,9 @@ def main():
         j.move(keys, border , npcs)
         offset_x = max(0, min(j.rect.x - win.get_width() // 2 + j.rect.width // 2, world_width - win.get_width()))
         offset_y = max(0, min(j.rect.y - win.get_height() // 2 + j.rect.height // 2, world_height - win.get_height()))
+
+        for npc in npcs:
+            npc.move(border , j , npcs)
 
         draw_window(j, npcs ,border , win, offset_x , offset_y)
 
