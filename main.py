@@ -12,7 +12,7 @@ def main():
     pygame.display.set_caption("Deep Murder (Juno / beta version)")
     j: Juno = Juno(world_width // 2, world_height // 2, speed=10)
     npcs: list[NPC] = []
-    for i in range(3):
+    for i in range(4):
         rand_x = random.randint(15 , world_width - 15)
         rand_y = random.randint(15 , world_height - 15)
         npc = NPC(rand_x , rand_y, win)
@@ -54,7 +54,8 @@ def draw_window(player, npcs: list[NPC] , barrier , window , x , y):
     keys = pygame.key.get_pressed()
     pygame.draw.rect(window, (189,52,235) , (0 - x, 0 - y, max_x , max_y) , 10)
 
-    sample = ["welcome to orbit" , "let the kitsune guide you" , "i am ready to put on a show"]
+    sample = ["welcome to orbit" , "let the kitsune guide you" ,
+              "i am ready to put on a show" , "nerf this"]
 
     for npc in npcs:
         npc.move(barrier, player, npcs)
@@ -62,12 +63,22 @@ def draw_window(player, npcs: list[NPC] , barrier , window , x , y):
 
     sorted_npc = sorted(npcs , key=lambda npc: player.distance_to(npc))
 
+    window.blit(player.img, (player.rect.x - x, player.rect.y - y))
+
     for npc in sorted_npc:
         if player.near_character(npc) and keys[pygame.K_p]:
             font = pygame.font.SysFont("Arial" , 30)
             text = font.render(sample[npcs.index(npc)] , False , (0,0,0))
+            text_x , text_y = 25 , window.get_height() - 100
+            text_rect = text.get_rect(topleft=(text_x, text_y))
+            pygame.draw.rect(window, (255, 255, 255),(text_rect.left - 8, text_rect.top - 8, text.get_width() + 16, text.get_height() + 16))
             window.blit(text , (25, window.get_height() - 100))
             break
+
+    pygame.display.update()
+
+if __name__ == "__main__":
+    main()
 
     window.blit(player.img , (player.rect.x - x , player.rect.y - y))
 
