@@ -39,8 +39,6 @@ class NPC(object):
         self.target_y = y
 
     def import_assets(self):
-
-
         self.animations = {
         'up': [], 'down': [], 'left': [], 'right': [], 'down_idle': [], 
         'right_idle': [], 'up_idle': [], 'left_idle': []

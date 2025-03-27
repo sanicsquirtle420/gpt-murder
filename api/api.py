@@ -1,8 +1,9 @@
-import os
-from dotenv import load_dotenv
-import openai
 from utilities.setuper import Setuper
 from utilities.data import characters
+from dotenv import load_dotenv
+import openai
+import os
+
 
 # Load environment variables
 load_dotenv()

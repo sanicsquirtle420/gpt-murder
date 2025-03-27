@@ -1,14 +1,12 @@
+from utilities.data import characters, dialogues
 import random
-from utilities.data import CHARACTERS, dialogues
 import re
 
 class Setuper:
     def __init__(self):
-        self.characters = CHARACTERS
+        self.characters = characters
     
     def initRoles(self, previous):
-        
-
         """
         This function initialized roles
         it takes array of 2 values as arguement
@@ -23,12 +21,8 @@ class Setuper:
         result[4] is index of the character that is falsely accused, but has an alibi
         """
 
-        
-
-        
         #Chooses random murderer and victim
         possible_choices = [i for i in range(5)]
-
 
         murderer_index = random.choice(possible_choices)
         victim_index = random.choice(possible_choices)
@@ -44,13 +38,9 @@ class Setuper:
         key_observer_index = random.choice(possible_choices)
         possible_choices.remove(key_observer_index)
 
-
         false_accuser, has_alibi = possible_choices
-
-
         
         return (self.characters[murderer_index], self.characters[victim_index], self.characters[key_observer_index], self.characters[false_accuser], self.characters[has_alibi])
-    
 
     def parse_dialogue(self, text):
         pattern = re.compile(r"###\s*name::(?P<name>.*?)\s*Personal Statement::(?P<personal_statement>.*?)\s*Observation::(?P<observation>.*?)\s*###", re.DOTALL)
