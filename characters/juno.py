@@ -1,7 +1,8 @@
-import pygame
-import os
 from utilities.support import *
+import pygame
 import math
+import os
+
 class Juno(object):
     # Player class
     def __init__(self , x: int , y: int , speed=1):
@@ -74,7 +75,7 @@ class Juno(object):
 
     def near_character(self, npc) -> bool:
         dist = math.sqrt((npc.rect.x - self.rect.x) ** 2 + (npc.rect.y - self.rect.y) ** 2)
-        return dist < npc.rect.x + 5 or dist < npc.rect.y + 5
+        return dist < 150
 
     def distance_to(self, npc):
         return math.sqrt((npc.rect.x - self.rect.x) ** 2 + (npc.rect.y - self.rect.y) ** 2)

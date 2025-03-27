@@ -1,7 +1,6 @@
+from utilities.support import *
 import random
 import pygame
-import os
-from utilities.support import *
 
 class NPC(object):
     def __init__(self, character, window):
