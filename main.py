@@ -1,7 +1,6 @@
 # from api.api import main as initialize_game_data 
 from characters.juno import *
 from characters.npc import *
-from utilities.data import *
 from utilities.draw import *
 import pygame
 
@@ -12,14 +11,14 @@ def main():
     # initialize_game_data()
     print(characters)
     main_theme =  pygame.mixer.Sound('audio/main_theme.mp3')
-    main_theme.play()
+    # main_theme.play()
     win = pygame.display.set_mode((1419, 734), pygame.RESIZABLE)
     bg = pygame.image.load("assets/Sprites/Setting/Map.png")
     world_width, world_height = bg.get_size()
     world_width *= 2
     world_height *= 2
     clock = pygame.time.Clock()
-    pygame.display.set_caption("Deep Murder (Juno / beta version)")
+    pygame.display.set_caption("Deep Murder (Juno version)")
     j: Juno = Juno(world_width // 2, world_height // 2, speed=10)
     npcs: list[NPC] = []
     for character in characters:
@@ -51,10 +50,7 @@ def main():
         keys = pygame.key.get_pressed()
         j.move(keys , border,  npcs)
         j.animate(60/1000)
-        offset_x = max(0, min(j.rect.x - win.get_width() // 2 + j.rect.width // 2, world_width - win.get_width()))
-        offset_y = max(0, min(j.rect.y - win.get_height() // 2 + j.rect.height // 2, world_height - win.get_height()))
-        
-        draw_window(j, npcs, win, offset_x, offset_y, button_center, button_radius, show_text)
+        draw_window(j, npcs, win, button_center, button_radius, show_text)
     
     pygame.quit()
 

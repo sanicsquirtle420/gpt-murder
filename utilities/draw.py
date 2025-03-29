@@ -1,10 +1,14 @@
 from characters.npc import *
 from utilities.data import *
 
-def draw_window(player, npcs: list[NPC], window, x, y, button_center, button_radius, show_text):
+def draw_window(player, npcs, window, button_center, button_radius, show_text):
     bg = pygame.image.load("assets/Sprites/Setting/Map.png")
     width, height = bg.get_size()
     scaled_bg = pygame.transform.scale(bg, (width * 2, height * 2))
+    world_height, world_width = window.get_height() * 2, window.get_width() * 2
+    # x / y offsets
+    x = max(0, min(player.rect.x - window.get_width() // 2 + player.rect.width // 2, world_width - window.get_width()))
+    y = max(0, min(player.rect.y - window.get_height() // 2 + player.rect.height // 2, world_height - window.get_height()))
     window.blit(scaled_bg, (-x, -y))
     
     keys = pygame.key.get_pressed()
@@ -24,8 +28,7 @@ def draw_window(player, npcs: list[NPC], window, x, y, button_center, button_rad
             txt_h = window.get_height() // 10
             rect = pygame.Rect(50, window.get_height() - 200, txt_w, txt_h)
             font = pygame.font.SysFont("Arial", 30)
-            tst_str = f"{npcs.index(npc)}: I draw the lovers is something tempting you. Let the kitsune guide you! Scaredy cat? But cats are the scariest creature of them all! Locking satelite vector."
-            dialogue_box = render_textrect(tst_str, font, rect, justification=0)
+            dialogue_box = render_textrect(npc.get_dialouge(), font, rect, (255,255,255))
             window.blit(dialogue_box, (rect.x , rect.y))
             break
     
@@ -36,16 +39,16 @@ def draw_window(player, npcs: list[NPC], window, x, y, button_center, button_rad
     text_rect = text_surface.get_rect(center=button_center)
     window.blit(text_surface, text_rect)
     
-    # Display text on button click
+    # Display text on button click COLOR: (249,228,188)
     if show_text:
-        text_box = pygame.Rect(50, 50, 300, 100)
-        pygame.draw.rect(window, (255, 255, 255), text_box)
-        text = font.render("Hello, this is a message!", True, (0, 0, 0))
-        window.blit(text, (text_box.x + 10, text_box.y + 40))
+        text_box = pygame.Rect(25, 50, 400, 200)
+        journal_box = render_textrect("Let the kitsune guide you! I draw the lovers... is something tempting you? I licked my wounds. Let's go." 
+            , font, text_box, (249,228,188), justification=1)
+        window.blit(journal_box, (text_box.x + 10, text_box.y + 40))
     
     pygame.display.update()
 
-def render_textrect(string, font, rect ,justification=0):
+def render_textrect(string, font, rect, bg_color ,justification=0, max_height=175):
     # creates a rect object for long text
     output = []
     request = string.splitlines()
@@ -65,19 +68,28 @@ def render_textrect(string, font, rect ,justification=0):
             
             output.append(line)
 
-    surface = pygame.Surface((rect.width , rect.height))
-    surface.fill((255,255,255))
+    total_h = len(output) * font.get_height()
+    total_h = min(total_h, max_height)
+
+    surface = pygame.Surface((rect.width , total_h), pygame.SRCALPHA)
+    surface.fill((bg_color))
 
     off_y = 0
     for line in output:
-        if off_y + font.get_height() > rect.width:
+        if off_y + font.get_height() > max_height:
             break
 
         if justification == 0:
-            txt_surface = font.render(line, True, (0,0,0))
-        # I'm too lazy to type out the other justifications
+            # left align
+            text_surface = font.render(line, True, (0,0,0))
+        elif justification == 1:
+            # center
+            text_surface = font.render(line, True, (0,0,0))
+            text_rect = text_surface.get_rect(center=(rect.width // 2, off_y + font.get_height() // 2))
         if justification == 0:
-            surface.blit(txt_surface, (0, off_y))
+            surface.blit(text_surface, (0, off_y))
+        else:
+            surface.blit(text_surface, text_rect.topleft)
 
         off_y += font.get_height()
     return surface

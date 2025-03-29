@@ -1,4 +1,5 @@
 from utilities.support import *
+from utilities.data import *
 import random
 import pygame
 
@@ -28,14 +29,14 @@ class NPC(object):
         self.window = window
         self.rect = pygame.Rect(x, y, self.scaled_img.get_width(), self.scaled_img .get_height())
 
-        
-
         self.last_move_time = pygame.time.get_ticks()
         self.wait_time = random.randint(5000, 8000)
 
         self.speed = 2 
         self.target_x = x
         self.target_y = y
+
+        self.dialogues = character["dialogues"]
 
     def import_assets(self):
         self.animations = {
@@ -115,6 +116,9 @@ class NPC(object):
         
         if self.rect.x == self.target_x and self.rect.y == self.target_y:
             self.status = self.status.split('_')[0] + '_idle'
+
+    def get_dialouge(self):
+        return self.dialogues[0]
 
     def draw(self, surface, x, y):
         surface.blit(self.img, (self.rect.x - x, self.rect.y - y))
