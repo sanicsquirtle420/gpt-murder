@@ -6,7 +6,8 @@ characters = [
         "spriteDir": "elsie",
         "init_pos": (1500, 1050),
         "movable_area": (300, 150),
-        "dialogues": ["ELSIE: EMP Activated"]
+        "dialogues": ["There’s a balance in every leaf, just like in Kiriko’s healing and precision. She tends to people like I tend to my orchids—carefully, with purpose." ,
+                      "If I could grow a flower as agile as Kiriko, it’d probably vanish mid-bloom and reappear in the next pot over!"]
     },
     {
         "name": "Finnley 'Finn' Thatch",
@@ -15,11 +16,8 @@ characters = [
         "spriteDir": "finn",
         "init_pos": (600, 1000),
         "movable_area": (900, 1300),
-        "dialogues": ["FINN: The objective of this lab is to apply Kirchhoff’s laws for circuits to determine the" \
-            " currents within a loop. In this experiment we set up a circuit with two power sources and resistors" \
-            " in series and parallel. Then we would measure the voltage across the loop with a voltmeter. After" \
-            " the voltage measurements were done we measured the current going across the circuit with an ammeter. The" \
-            " reason we measured the current was to prove Kirchoff’s Current law where the"]
+        "dialogues": ["I once hooked a salmon so big, it dodged like Juno in a firefight—quick on her fins, that one!"
+            , "Juno's got that spark, y’know? If I had a coin for every animal that took to her, I’d retire with a boat made of goldfish."]
     },
         {
         "name": "Garrick 'Garry' Ironwood",
@@ -28,7 +26,8 @@ characters = [
         "spriteDir": "garry",
         "init_pos": (860, 120),
         "movable_area": (1360, 0),
-        "dialogues": ["GARRY: I am ready to put on a show"]
+        "dialogues": ["Luna Snow’s powers are unpredictable, like an ice storm. But I’ve seen her fight—with discipline. She’s no street performer; she’s a soldier."
+            , "Magic or not, I respect anyone who protects their people. Luna may sing, but her strength speaks louder."]
     },
         {
         "name": "Marlowe Reed",
@@ -37,7 +36,8 @@ characters = [
         "spriteDir": "reed",
         "init_pos": (1900, 600),
         "movable_area": (400, 200),
-        "dialogues": ["MARLOWE: Welcome to orbit"]
+        "dialogues": ["That D.Va… a warrior wrapped in bright lights and louder engines. I wonder what seeds she’d sow if she ever stood still long enough."
+                      ,"She barters in fame and firepower. I trade in rarities. But we both know the value of what others overlook."]
     },
     {
         "name": "Sylvia Pine",
@@ -46,8 +46,7 @@ characters = [
         "spriteDir": "sylvia",
         "init_pos": (200, 650),
         "movable_area": (400, 150),
-        "dialogues": ["SYLVIA: Let the kitsune guide you!"]
+        "dialogues": ["She’s like fine joinery—hidden, but holding everything together. That kind of strength deserves respect."
+                      , "I build walls. She becomes them. It’s not about being seen—it’s about what you’re there to support."]
     },
 ]
-
-# dialogues = []
