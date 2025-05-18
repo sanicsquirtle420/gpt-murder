@@ -1,10 +1,13 @@
-from utilities.data import characters, dialogues
 import random
+import json
 import re
 
 class Setuper:
     def __init__(self):
-        self.characters = characters
+        with open("data.json", "r") as f:
+            chars = json.load(f)
+
+        self.characters = chars["characters"]
     
     def initRoles(self, previous):
         """

@@ -1,12 +1,11 @@
 from utilities.support import *
-from utilities.data import *
 import random
 import pygame
 
 class NPC(object):
     def __init__(self, character, window):
-        x = character["init_pos"][0]
-        y = character["init_pos"][1]
+        x = tuple(character["init_pos"])[0]
+        y = tuple(character["init_pos"])[1]
 
         self.initX = x
         self.initY = y
@@ -16,7 +15,7 @@ class NPC(object):
         
         self.import_assets()
         self.spriteDir = character["spriteDir"]
-        self.movable_area = character["movable_area"]
+        self.movable_area = tuple(character["movable_area"])
         self.status = "down_idle"
         self.frame_index = 0
 
@@ -117,8 +116,8 @@ class NPC(object):
         if self.rect.x == self.target_x and self.rect.y == self.target_y:
             self.status = self.status.split('_')[0] + '_idle'
 
-    def get_dialouge(self):
-        return self.dialogues[0]
+    def get_dialogue(self):
+        return self.dialogues[random.randint(0, 1)]
 
     def draw(self, surface, x, y):
         surface.blit(self.img, (self.rect.x - x, self.rect.y - y))

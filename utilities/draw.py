@@ -1,7 +1,6 @@
 from characters.npc import *
-from utilities.data import *
 
-def draw_window(player, npcs, window, button_center, button_radius, show_text):
+def draw_window(player, npcs, window, button_center, button_radius, show_text, show_dialouge):
     bg = pygame.image.load("assets/Sprites/Setting/Map.png")
     width, height = bg.get_size()
     scaled_bg = pygame.transform.scale(bg, (width * 2, height * 2))
@@ -18,17 +17,29 @@ def draw_window(player, npcs, window, button_center, button_radius, show_text):
         npc.move()
         npc.animate(60/1000)
         npc.draw(window, x, y)
-    
-    sorted_npc = sorted(npcs, key=lambda npc: player.distance_to(npc))
+
     player.draw(window, x, y)
+
+    sorted_npc = sorted(npcs, key=lambda npc: player.distance_to(npc))
+
+    if show_dialouge:
+        for npc in sorted_npc:
+            if player.near_character(npc):
+                txt_w = window.get_width() - 100
+                txt_h = window.get_height() // 10
+                rect = pygame.Rect(50, window.get_height() - 200, txt_w, txt_h)
+                font = pygame.font.SysFont("Arial", 30)
+                dialogue_box = render_textrect(npc.get_dialogue(), font, rect, (255, 255, 255))
+                window.blit(dialogue_box, (rect.x, rect.y))
+                break
     
     for npc in sorted_npc:
-        if player.near_character(npc) and keys[pygame.K_p]:
+        if player.near_character(npc):
             txt_w = window.get_width() - 100
             txt_h = window.get_height() // 10
             rect = pygame.Rect(50, window.get_height() - 200, txt_w, txt_h)
             font = pygame.font.SysFont("Arial", 30)
-            dialogue_box = render_textrect(npc.get_dialouge(), font, rect, (255,255,255))
+            dialogue_box = render_textrect(npc.get_dialogue(), font, rect, (255, 255, 255))
             window.blit(dialogue_box, (rect.x , rect.y))
             break
     
@@ -42,13 +53,13 @@ def draw_window(player, npcs, window, button_center, button_radius, show_text):
     # Display text on button click COLOR: (249,228,188)
     if show_text:
         text_box = pygame.Rect(25, 50, 400, 200)
-        journal_box = render_textrect("Let the kitsune guide you! I draw the lovers... is something tempting you? I licked my wounds. Let's go." 
+        journal_box = render_textrect("Kiriko is a swift support hero in Overwatch 2, blending healing and damage with her kunai and healing talismans. She can teleport to allies, cleanse debuffs, and summon a fox spirit to boost speed and cooldowns, making her a versatile and clutch teammate."
             , font, text_box, (249,228,188), justification=1)
         window.blit(journal_box, (text_box.x + 10, text_box.y + 40))
     
     pygame.display.update()
 
-def render_textrect(string, font, rect, bg_color ,justification=0, max_height=175):
+def render_textrect(string, font, rect, bg_color, justification=0, max_height=175):
     # creates a rect object for long text
     output = []
     request = string.splitlines()
@@ -72,7 +83,7 @@ def render_textrect(string, font, rect, bg_color ,justification=0, max_height=17
     total_h = min(total_h, max_height)
 
     surface = pygame.Surface((rect.width , total_h), pygame.SRCALPHA)
-    surface.fill((bg_color))
+    surface.fill(bg_color)
 
     off_y = 0
     for line in output:
